@@ -11,8 +11,7 @@
         android:layout_width="@dimen/item_transform_image_length"
         android:layout_height="@dimen/item_transform_image_length"
         android:layout_margin="4dp"
-        tools:src="@tools:sample/avatars"
-        android:contentDescription="@string/image_view_item_transform_content_description" />
+        tools:src="@tools:sample/avatars" />
 
     <!-- LEFT SIDE: IMAGE + STATUS ICONS -->
     <LinearLayout
