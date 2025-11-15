@@ -72,4 +72,7 @@ dependencies {
 
     // Swiper Refresh
     implementation(libs.swiperefreshlayout)
+
+    // Toggle
+    implementation(libs.githubtoggle)
 }

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingStart="8dp"
+    android:paddingEnd="8dp">
+
+    <com.github.angads25.toggle.widget.LabeledSwitch
+        android:id="@+id/nav_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:textSize="14sp"
+        app:colorBorder="@color/color_primary"
+        app:colorOff="@color/white"
+        app:colorOn="@color/black"
+        app:on="true"
+        app:textOff="Light"
+        app:textOn="Dark" />
+
+</FrameLayout>

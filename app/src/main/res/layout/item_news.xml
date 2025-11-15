@@ -69,4 +69,13 @@
         android:textSize="12sp"
         android:textColor="#777777" />
 
+    <!-- Description -->
+    <TextView
+        android:id="@+id/newsContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Content"
+        android:textSize="14sp"
+        android:paddingBottom="4dp" />
+
 </LinearLayout>

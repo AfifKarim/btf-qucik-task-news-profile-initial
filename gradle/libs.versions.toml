@@ -25,6 +25,8 @@ glide = "4.16.0"
 
 swiperefresh = "1.1.0"
 
+toggle = "1.1.0"
+
 [libraries]
 # Android UI
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
@@ -64,6 +66,9 @@ glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", versi
 
 # SwipeRefresh
 swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefresh" }
+
+# SwipeRefresh
+githubtoggle = { group = "com.github.angads25", name = "toggle", version.ref = "toggle" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

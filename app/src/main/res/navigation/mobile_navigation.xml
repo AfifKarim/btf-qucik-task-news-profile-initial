@@ -22,10 +22,4 @@
         android:name="com.btf.quick_tasks.ui.profile.ProfileFragment"
         android:label="@string/menu_user_profile"
         tools:layout="@layout/fragment_profile" />
-
-    <fragment
-        android:id="@+id/nav_settings"
-        android:name="com.btf.quick_tasks.ui.settings.SettingsFragment"
-        android:label="@string/menu_settings"
-        tools:layout="@layout/fragment_settings" />
 </navigation>

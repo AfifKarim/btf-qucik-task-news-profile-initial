@@ -98,7 +98,12 @@ public class NewsFragment extends Fragment implements DatePickerDialog.OnDateSet
         binding.apiSP.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selected_apiCall = position == 0 ? null : parent.getItemAtPosition(position).toString();
+                if (position == 0) {   // "Select API"
+                    selected_apiCall = null;
+                    return;             // ❗ DO NOT CALL loadNews()
+                }
+
+                selected_apiCall = parent.getItemAtPosition(position).toString();
 
                 // Update paramsSP based on selected_apiCall
                 updateParamsSpinner(selected_apiCall);
@@ -119,8 +124,15 @@ public class NewsFragment extends Fragment implements DatePickerDialog.OnDateSet
         binding.paramsSP.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selected_parameters = position == 0 ? null : parent.getItemAtPosition(position).toString();
-                loadNews();
+                if (position == 0) {  // "Select parameter"
+                    selected_parameters = null;
+                    return;            // ❗ DO NOT CALL loadNews()
+                }
+
+                selected_parameters = parent.getItemAtPosition(position).toString();
+
+                if (selected_apiCall != null)
+                    loadNews();
             }
 
             @Override
@@ -155,8 +167,11 @@ public class NewsFragment extends Fragment implements DatePickerDialog.OnDateSet
     }
 
     private void loadNews() {
-        if (selected_apiCall == null && selected_parameters == null) return;
-
+        // SAFETY CHECK — prevents your crash
+        if (selected_apiCall == null || selected_parameters == null) {
+            Log.d("NewsAPI", "Skipping loadNews: required selection NULL");
+            return;
+        }
         binding.swipeRefreshLayout.setRefreshing(true);
 
         String q = null;
@@ -185,6 +200,10 @@ public class NewsFragment extends Fragment implements DatePickerDialog.OnDateSet
                 case "wsj.com":
                     sources = "wsj.com";
                     break;
+                default:
+                    Log.e("NewsAPI", "Unknown parameter: " + selected_parameters);
+                    binding.swipeRefreshLayout.setRefreshing(false);
+                    return;
             }
 
             apiInterface.getEverything(q, from, to, sortBy, sources, Global.api_Key)
@@ -198,6 +217,10 @@ public class NewsFragment extends Fragment implements DatePickerDialog.OnDateSet
                 case "sources":
                     sources = "techcrunch";
                     break;
+                default:
+                    Log.e("NewsAPI", "Unknown parameter: " + selected_parameters);
+                    binding.swipeRefreshLayout.setRefreshing(false);
+                    return;
             }
             apiInterface.getTopHeadlines(country, category, sources, Global.api_Key)
                     .enqueue(getNewsCallback());
@@ -260,8 +283,10 @@ public class NewsFragment extends Fragment implements DatePickerDialog.OnDateSet
     private void updateParamsSpinner(String apiCall) {
         int arrayRes;
         if ("everything".equalsIgnoreCase(apiCall)) {
+            binding.dateTitleLayout.setVisibility(View.VISIBLE);
             arrayRes = R.array.select_parameter1;
         } else {
+            binding.dateTitleLayout.setVisibility(View.GONE);
             arrayRes = R.array.select_parameter2;
         }
 
