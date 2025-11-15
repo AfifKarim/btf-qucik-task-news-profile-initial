@@ -1,4 +1,4 @@
-package com.btf.quick_task_nav;
+package com.btf.quick_tasks;
 
 import org.junit.Test;
 

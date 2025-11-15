@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "quick_task_nav"
+rootProject.name = "Quick_Tasks"
 include(":app")
  

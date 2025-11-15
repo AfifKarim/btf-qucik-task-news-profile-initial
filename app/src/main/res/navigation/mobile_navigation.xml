@@ -7,25 +7,25 @@
 
     <fragment
         android:id="@+id/nav_tasks"
-        android:name="com.btf.quick_task_nav.ui.tasks.TasksFragment"
+        android:name="com.btf.quick_tasks.ui.tasks.TasksFragment"
         android:label="@string/menu_tasks"
-        tools:layout="@layout/fragment_transform" />
+        tools:layout="@layout/fragment_tasks" />
 
     <fragment
         android:id="@+id/nav_news"
-        android:name="com.btf.quick_task_nav.ui.news.NewsFragment"
+        android:name="com.btf.quick_tasks.ui.news.NewsFragment"
         android:label="@string/menu_news"
-        tools:layout="@layout/fragment_reflow" />
+        tools:layout="@layout/fragment_news" />
 
     <fragment
         android:id="@+id/nav_profile"
-        android:name="com.btf.quick_task_nav.ui.profile.ProfileFragment"
+        android:name="com.btf.quick_tasks.ui.profile.ProfileFragment"
         android:label="@string/menu_user_profile"
-        tools:layout="@layout/fragment_slideshow" />
+        tools:layout="@layout/fragment_profile" />
 
     <fragment
         android:id="@+id/nav_settings"
-        android:name="com.btf.quick_task_nav.ui.settings.SettingsFragment"
+        android:name="com.btf.quick_tasks.ui.settings.SettingsFragment"
         android:label="@string/menu_settings"
         tools:layout="@layout/fragment_settings" />
 </navigation>

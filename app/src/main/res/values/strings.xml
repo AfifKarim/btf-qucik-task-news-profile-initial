@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">quick_task_nav</string>
+    <string name="app_name">Quick Tasks</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -22,4 +22,25 @@
     <string name="image_view_item_transform_content_description">Represents an image view in the
         item
     </string>
+
+    <string-array name="select_apiCall">
+        <item>Select</item>
+        <item>everything</item>
+        <item>top-headlines</item>
+    </string-array>
+
+
+    <string-array name="select_parameter1">
+        <item>Select</item>
+        <item>apple</item>
+        <item>tesla</item>
+        <item>wsj.com</item>
+    </string-array>
+
+    <string-array name="select_parameter2">
+        <item>Select</item>
+        <item>country</item>
+        <item>sources</item>
+    </string-array>
+
 </resources>
