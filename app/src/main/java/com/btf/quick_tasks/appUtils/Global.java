@@ -41,6 +41,12 @@ public class Global {
         return formattedDate;
     }
 
+    public static String getCurrentDateWithTime() {
+        Date currentDate = Calendar.getInstance().getTime();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+        return simpleDateFormat.format(currentDate);
+    }
+
     public  static String FormateDate(Date dt) {
         if (dt !=null ){
             return (new SimpleDateFormat(ShowDateFormate,AppDefaultLocal)).format(dt);

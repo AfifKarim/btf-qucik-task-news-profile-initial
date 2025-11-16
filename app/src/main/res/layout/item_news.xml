@@ -4,7 +4,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="8dp"
-    android:background="?android:attr/selectableItemBackground"
     android:layout_marginBottom="8dp">
 
     <!-- News Image -->
@@ -14,6 +13,13 @@
         android:layout_height="200dp"
         android:scaleType="centerCrop"
         android:contentDescription="News Image" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="3dp"
+        android:background="@color/light_gray" />
+
 
     <!-- Title -->
     <TextView
@@ -34,6 +40,21 @@
         android:text="Description"
         android:textSize="14sp"
         android:paddingBottom="4dp" />
+
+    <!-- Description -->
+    <TextView
+        android:id="@+id/newsContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Content"
+        android:textSize="14sp"
+        android:paddingBottom="4dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="3dp"
+        android:background="@color/light_gray" />
 
     <!-- Author and Source -->
     <LinearLayout
@@ -68,14 +89,5 @@
         android:text="Published Date"
         android:textSize="12sp"
         android:textColor="#777777" />
-
-    <!-- Description -->
-    <TextView
-        android:id="@+id/newsContent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Content"
-        android:textSize="14sp"
-        android:paddingBottom="4dp" />
 
 </LinearLayout>

@@ -7,8 +7,46 @@
     <string name="nav_header_desc">Navigation header</string>
 
     <string name="menu_tasks">Tasks</string>
+    <string name="menu_add_task">Add Task</string>
     <string name="menu_news">News</string>
     <string name="menu_user_profile">Profile</string>
+
+    <!-- Task Strings Start -->
+
+    <string name="task_tile">Task Title</string>
+    <string name="task_description">Description</string>
+    <string name="task_priority">Priority</string>
+
+    <string-array name="select_priority">
+        <item>None</item>
+        <item>Low</item>
+        <item>Medium</item>
+        <item>High</item>
+    </string-array>
+
+    <string name="task_dueDate">Due Date</string>
+    <string name="task_status">Status</string>
+
+    <string-array name="select_status">
+        <item>None</item>
+        <item>To Do</item>
+        <item>In Progress</item>
+        <item>Pending</item>
+        <item>Completed</item>
+        <item>On Hold</item>
+        <item>Cancelled</item>
+    </string-array>
+
+    <string name="task_save_Btn">Save Button</string>
+
+    <!-- Task Strings End -->
+
+
+    <!-- News Strings Start -->
+
+    <string name="select_api">Select Api</string>
+
+    <string name="select_parameter">Select Parameter</string>
 
     <string-array name="select_apiCall">
         <item>Select</item>
@@ -29,5 +67,7 @@
         <item>country</item>
         <item>sources</item>
     </string-array>
+
+    <!-- News Strings End -->
 
 </resources>

@@ -12,6 +12,15 @@
         tools:layout="@layout/fragment_tasks" />
 
     <fragment
+        android:id="@+id/addTaskFragment"
+        android:name="com.btf.quick_tasks.ui.tasks.AddTaskFragment"
+        android:label="@string/menu_add_task" />
+
+    <action
+        android:id="@+id/action_nav_tasks_to_addTaskFragment"
+        app:destination="@id/addTaskFragment" />
+
+    <fragment
         android:id="@+id/nav_news"
         android:name="com.btf.quick_tasks.ui.news.NewsFragment"
         android:label="@string/menu_news"

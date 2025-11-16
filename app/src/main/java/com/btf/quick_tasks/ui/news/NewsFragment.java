@@ -49,8 +49,8 @@ public class NewsFragment extends Fragment implements DatePickerDialog.OnDateSet
 
     private ArrayAdapter<String> apiSP, paramsSP;
     private List<ArticleResponseModel> articleList = new ArrayList<>();
-    private boolean frmDate, tDate = false;
-    private String selected_apiCall, selected_parameters, fromDate, toDate = null;
+    private boolean ffrmDate, ftDate = false;
+    private String selected_apiCall, selected_parameters, sfromDate, stoDate = null;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -75,15 +75,11 @@ public class NewsFragment extends Fragment implements DatePickerDialog.OnDateSet
 
         // Default values
         selected_apiCall = "everything";
-//        Global.setSpinnerValue(apiSP, selected_apiCall, binding.apiSP);
         selected_parameters = "apple";
-        // Update params spinner based on selected_apiCall
-//        updateParamsSpinner(selected_apiCall);
-//        Global.setSpinnerValue(paramsSP, selected_parameters, binding.paramsSP);
-        fromDate = Global.getCurrentMonth() + "-01";
-        binding.fromDateTV.setText("Date: " + fromDate);
-        toDate = Global.getCurrentDateYYMMDD();
-        binding.toDateTV.setText("Date: " + toDate);
+        sfromDate = Global.getCurrentMonth() + "-01";
+        binding.fromDateTV.setText("Date: " + sfromDate);
+        stoDate = Global.getCurrentDateYYMMDD();
+        binding.toDateTV.setText("Date: " + stoDate);
 
         loadNews(); // Default load
     }
@@ -142,14 +138,14 @@ public class NewsFragment extends Fragment implements DatePickerDialog.OnDateSet
 
     private void setupDatePickers() {
         binding.fromDateTV.setOnClickListener(v -> {
-            frmDate = true;
+            ffrmDate = true;
             DialogFragment datePicker = new DatePickerFragment();
             datePicker.setTargetFragment(NewsFragment.this, 0);
             datePicker.show(getFragmentManager(), "targetDate");
         });
 
         binding.toDateTV.setOnClickListener(v -> {
-            tDate = true;
+            ftDate = true;
             DialogFragment datePicker = new DatePickerFragment();
             datePicker.setTargetFragment(NewsFragment.this, 0);
             datePicker.show(getFragmentManager(), "targetDate");
@@ -168,7 +164,7 @@ public class NewsFragment extends Fragment implements DatePickerDialog.OnDateSet
 
     private void loadNews() {
         // SAFETY CHECK — prevents your crash
-        if (selected_apiCall == null || selected_parameters == null) {
+        if (!isAdded() || binding == null || selected_apiCall == null || selected_parameters == null) {
             Log.d("NewsAPI", "Skipping loadNews: required selection NULL");
             return;
         }
@@ -187,14 +183,14 @@ public class NewsFragment extends Fragment implements DatePickerDialog.OnDateSet
             switch (selected_parameters) {
                 case "apple":
                     q = "apple";
-                    from = fromDate;
-                    to = toDate;
+                    from = sfromDate;
+                    to = stoDate;
                     sortBy = "popularity"; // sorted by popularity
                     break;
                 case "tesla":
                     q = "tesla";
-                    from = fromDate;
-                    to = toDate;
+                    from = sfromDate;
+                    to = stoDate;
                     sortBy = "publishedAt"; // sorted by latest
                     break;
                 case "wsj.com":
@@ -207,7 +203,7 @@ public class NewsFragment extends Fragment implements DatePickerDialog.OnDateSet
             }
 
             apiInterface.getEverything(q, from, to, sortBy, sources, Global.api_Key)
-                    .enqueue(getNewsCallback());
+                    .enqueue(getNewsCallback(selected_parameters));
         } else if ("top-headlines".equals(selected_apiCall)) {
             switch (selected_parameters) {
                 case "country":
@@ -223,7 +219,7 @@ public class NewsFragment extends Fragment implements DatePickerDialog.OnDateSet
                     return;
             }
             apiInterface.getTopHeadlines(country, category, sources, Global.api_Key)
-                    .enqueue(getNewsCallback());
+                    .enqueue(getNewsCallback(selected_parameters));
         }
 
         // Log API request parameters
@@ -233,10 +229,11 @@ public class NewsFragment extends Fragment implements DatePickerDialog.OnDateSet
     }
 
     // Reusable callback for both API calls
-    private Callback<NewsResponseModel> getNewsCallback() {
+    private Callback<NewsResponseModel> getNewsCallback(String selected_parameters) {
         return new Callback<NewsResponseModel>() {
             @Override
             public void onResponse(Call<NewsResponseModel> call, Response<NewsResponseModel> response) {
+                if (!isAdded() || binding == null) return; // ✅ Safety check
                 binding.swipeRefreshLayout.setRefreshing(false);
 
                 try {
@@ -272,6 +269,7 @@ public class NewsFragment extends Fragment implements DatePickerDialog.OnDateSet
 
             @Override
             public void onFailure(Call<NewsResponseModel> call, Throwable t) {
+                if (!isAdded() || binding == null) return;
                 binding.swipeRefreshLayout.setRefreshing(false);
                 Log.e("NewsAPI", "API call failed", t);
                 Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
@@ -314,23 +312,24 @@ public class NewsFragment extends Fragment implements DatePickerDialog.OnDateSet
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        if (!isAdded() || binding == null) return;
         Calendar c = Calendar.getInstance();
         c.set(year, month, dayOfMonth);
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         String selectedDate = sdf.format(c.getTime());
 
-        if (frmDate) {
-            fromDate = selectedDate;
+        if (ffrmDate) {
+            stoDate = selectedDate;
             binding.fromDateTV.setText("Date: " + Global.FormateDate(c.getTime()));
-            frmDate = false;
+            ffrmDate = false;
             loadNews();
         }
 
-        if (tDate) {
-            toDate = selectedDate;
+        if (ftDate) {
+            stoDate = selectedDate;
             binding.toDateTV.setText("Date: " + Global.FormateDate(c.getTime()));
-            tDate = false;
+            ftDate = false;
             loadNews();
         }
     }

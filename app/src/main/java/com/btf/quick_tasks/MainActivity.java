@@ -8,7 +8,6 @@ import android.view.View;
 
 import com.github.angads25.toggle.widget.LabeledSwitch;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.materialswitch.MaterialSwitch;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
@@ -27,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private SharedPreferences prefs;
+    private ActivityMainBinding binding;
+    private NavController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,60 +44,73 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
 
-        // -------------------------
-        // NORMAL ACTIVITY SETUP
-        // -------------------------
-        ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
+        // Inflate view binding
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        // Toolbar
         setSupportActionBar(binding.appBarMain.toolbar);
-        if (binding.appBarMain.addTaskBtn != null) {
-            binding.appBarMain.addTaskBtn.setOnClickListener(view ->
-                    Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).setAnchorView(R.id.addTaskBtn).show());
-        }
 
+        // -------------------------
+        // NAVIGATION SETUP
+        // -------------------------
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_fragment_content_main);
-        assert navHostFragment != null;
-        NavController navController = navHostFragment.getNavController();
+        navController = navHostFragment.getNavController();
 
-        // -------------------------
-        // NAVIGATION DRAWER SETUP
-        // -------------------------
         NavigationView navigationView = binding.navView;
         if (navigationView != null) {
             mAppBarConfiguration = new AppBarConfiguration.Builder(
                     R.id.nav_tasks, R.id.nav_news, R.id.nav_profile)
                     .setOpenableLayout(binding.drawerLayout)
                     .build();
+
             NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
             NavigationUI.setupWithNavController(navigationView, navController);
 
-            // -------------------------
-            // SETUP SWITCH IN NAV DRAWER
-            // -------------------------
+            // THEME SWITCH IN NAV DRAWER
             MenuItem themeItem = navigationView.getMenu().findItem(R.id.action_theme);
             if (themeItem != null) {
                 LabeledSwitch labeledSwitch = themeItem.getActionView().findViewById(R.id.nav_switch);
-                labeledSwitch.setOn(labeledSwitch.isOn()); // to force initial redraw
-
-                // Set initial switch state
                 labeledSwitch.setOn(isDark);
-
-                labeledSwitch.setOnToggledListener((labeledSwitch1, isOn) -> {
-                    toggleTheme(isOn);
-                });
+                labeledSwitch.setOnToggledListener((sw, isOn) -> toggleTheme(isOn));
             }
         }
 
-        // -------------------------
-        // BOTTOM NAVIGATION (if needed)
-        // -------------------------
+        // Bottom Nav
         BottomNavigationView bottomNavigationView = binding.appBarMain.contentMain.bottomNavView;
         if (bottomNavigationView != null) {
             NavigationUI.setupWithNavController(bottomNavigationView, navController);
         }
+
+        // -------------------------
+        // FAB CLICK ACTION
+        // -------------------------
+        binding.appBarMain.addTaskBtn.setOnClickListener(view -> {
+            navController = Navigation.findNavController(
+                    this, R.id.nav_host_fragment_content_main
+            );
+            navController.navigate(R.id.action_nav_tasks_to_addTaskFragment);
+        });
+
+        // -------------------------
+        // SHOW/HIDE FAB BASED ON DESTINATION
+        // -------------------------
+        navController.addOnDestinationChangedListener((controller, destination, args) -> {
+            if (destination.getId() == R.id.nav_tasks) {
+                binding.appBarMain.toolbar.setTitle(getString(R.string.menu_tasks));
+                binding.appBarMain.addTaskBtn.setVisibility(View.VISIBLE);
+            } else if (destination.getId() == R.id.nav_news) {
+                binding.appBarMain.toolbar.setTitle(getString(R.string.menu_news));
+                binding.appBarMain.addTaskBtn.setVisibility(View.GONE);
+            } else if (destination.getId() == R.id.nav_profile) {
+                binding.appBarMain.toolbar.setTitle(getString(R.string.menu_user_profile));
+                binding.appBarMain.addTaskBtn.setVisibility(View.GONE);
+            } else {
+                binding.appBarMain.toolbar.setTitle(getString(R.string.menu_add_task));
+                binding.appBarMain.addTaskBtn.setVisibility(View.GONE);
+            }
+        });
     }
 
     private void toggleTheme(boolean darkMode) {
@@ -110,16 +124,12 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.overflow, menu);
 
-        // Setup switch in toolbar menu
         MenuItem item = menu.findItem(R.id.action_theme);
         if (item != null) {
             LabeledSwitch labeledSwitch = item.getActionView().findViewById(R.id.nav_switch);
             boolean isDark = prefs.getBoolean("dark_mode", false);
             labeledSwitch.setOn(isDark);
-
-            labeledSwitch.setOnToggledListener((labeledSwitch1, isOn) -> {
-                toggleTheme(isOn);
-            });
+            labeledSwitch.setOnToggledListener((sw, isOn) -> toggleTheme(isOn));
         }
         return true;
     }

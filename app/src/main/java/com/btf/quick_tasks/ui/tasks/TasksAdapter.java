@@ -1,80 +1,86 @@
 package com.btf.quick_tasks.ui.tasks;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.btf.quick_tasks.R;
+import com.btf.quick_tasks.dataBase.entites.TaskEntity;
 import com.btf.quick_tasks.databinding.ItemTasksBinding;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TasksAdapter extends ListAdapter<String, TasksAdapter.TasksViewHolder> {
+public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TasksViewHolder> {
 
-    // Dummy images (replace with your own)
-    private final List<Integer> drawables = Arrays.asList(
-            R.drawable.ic_tasks,
-            R.drawable.ic_tasks,
-            R.drawable.ic_tasks,
-            R.drawable.ic_tasks
-    );
+    public static final String TAG = TasksAdapter.class.getName();
+    List<TaskEntity> list = new ArrayList<>();
+    Context context;
+    int fragment_index;
+    String voCode, voName;
 
-    public TasksAdapter() {
-        super(DIFF_CALLBACK);
+    public TasksAdapter(Context context) {
+        this.context = context;
     }
-
-    private static final DiffUtil.ItemCallback<String> DIFF_CALLBACK =
-            new DiffUtil.ItemCallback<String>() {
-                @Override
-                public boolean areItemsTheSame(@NonNull String oldItem, @NonNull String newItem) {
-                    return oldItem.equals(newItem);
-                }
-
-                @Override
-                public boolean areContentsTheSame(@NonNull String oldItem, @NonNull String newItem) {
-                    return oldItem.equals(newItem);
-                }
-            };
 
     @NonNull
     @Override
     public TasksViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemTasksBinding binding = ItemTasksBinding.inflate(
-                LayoutInflater.from(parent.getContext()), parent, false
-        );
+        ItemTasksBinding binding = ItemTasksBinding.inflate(LayoutInflater.from(context), parent, false);
         return new TasksViewHolder(binding);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TasksViewHolder holder, int position) {
-        holder.taskTitle.setText(getItem(position));
+    public void onBindViewHolder(@NonNull TasksAdapter.TasksViewHolder holder, int position) {
 
-        if (position < drawables.size()) {
-            holder.taskImage.setImageDrawable(
-                    ResourcesCompat.getDrawable(holder.taskImage.getResources(),
-                            drawables.get(position), null)
-            );
-        }
+        TaskEntity m = list.get(position);
+
+        holder.mbinding.taskTitle.setText(m.getTitle());
+        holder.mbinding.taskDesc.setText(m.getDescription());
+        holder.mbinding.taskCreatedAt.setText("Created Date: " + m.getCreatedAt());
+        holder.mbinding.taskPriority.setText(m.getPriority());
     }
 
-    static class TasksViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public int getItemCount() {
+        return list.size();
+    }
 
-        ImageView taskImage;
-        TextView taskTitle;
+    public void setTaskList(List<TaskEntity> list) {
+        this.list = list;
+        notifyDataSetChanged();
+    }
 
-        TasksViewHolder(ItemTasksBinding binding) {
+    public void TaskFilter(List<TaskEntity> filteredList) {
+        this.list = filteredList;
+        notifyDataSetChanged();
+    }
+
+
+    public static class TasksViewHolder extends RecyclerView.ViewHolder {
+
+        ItemTasksBinding mbinding;
+
+        public TasksViewHolder(@NonNull ItemTasksBinding binding) {
             super(binding.getRoot());
-            taskImage = binding.taskImage;
-            taskTitle = binding.taskTitle;
+            mbinding = binding;
         }
     }
 }
