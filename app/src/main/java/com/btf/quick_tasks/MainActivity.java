@@ -2,12 +2,16 @@ package com.btf.quick_tasks;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.Menu;
 import android.view.View;
 
 import com.btf.quick_tasks.appUtils.NotificationHelper;
 import com.btf.quick_tasks.appUtils.NotificationScheduler;
+import com.btf.quick_tasks.dataBase.dao.CommonDAO;
+import com.btf.quick_tasks.dataBase.entites.TaskEntity;
+import com.btf.quick_tasks.dataBase.tasksDb;
 import com.github.angads25.toggle.widget.LabeledSwitch;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -23,6 +27,8 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.btf.quick_tasks.databinding.ActivityMainBinding;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,7 +53,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         NotificationHelper.createNotificationChannel(this);
-        NotificationScheduler.startFifteenMinuteChecker(this);
+        // -------------------------
+        // SCHEDULE NOTIFICATIONS FOR ALL TASKS
+        // -------------------------
+        scheduleAllTaskNotifications();
 
         // Inflate view binding
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -157,5 +166,26 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    /**
+     * Load all tasks from DB and schedule notifications for each one
+     */
+    private void scheduleAllTaskNotifications() {
+        tasksDb db = tasksDb.getInstance(this);
+        CommonDAO dao = db.commonDao();
+
+        List<TaskEntity> tasks = dao.getAllTasksDirect();
+
+        if (tasks == null || tasks.isEmpty()) {
+            Log.e("Notify", "No tasks found, nothing to schedule.");
+            return;
+        }
+
+        Log.e("Notify", "Scheduling notifications for " + tasks.size() + " tasks.");
+
+        for (TaskEntity task : tasks) {
+            NotificationScheduler.scheduleTaskNotification(this, task);
+        }
     }
 }

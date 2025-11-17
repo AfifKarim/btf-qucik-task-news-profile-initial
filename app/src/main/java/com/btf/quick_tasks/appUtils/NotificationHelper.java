@@ -29,7 +29,7 @@ public class NotificationHelper {
 
     public static void showNotification(Context context, String title, String message) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_launcher_app_logo_bg) // Replace with your icon
+                .setSmallIcon(R.drawable.ic_notification) // Replace with your icon
                 .setContentTitle(title)
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
