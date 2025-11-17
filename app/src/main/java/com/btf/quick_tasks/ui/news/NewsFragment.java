@@ -77,9 +77,9 @@ public class NewsFragment extends Fragment implements DatePickerDialog.OnDateSet
         selected_apiCall = "everything";
         selected_parameters = "apple";
         sfromDate = Global.getCurrentMonth() + "-01";
-        binding.fromDateTV.setText("Date: " + sfromDate);
+        binding.fromDateTV.setText("From: " + sfromDate);
         stoDate = Global.getCurrentDateYYMMDD();
-        binding.toDateTV.setText("Date: " + stoDate);
+        binding.toDateTV.setText("To: " + stoDate);
 
         loadNews(); // Default load
     }
@@ -163,69 +163,80 @@ public class NewsFragment extends Fragment implements DatePickerDialog.OnDateSet
     }
 
     private void loadNews() {
-        // SAFETY CHECK — prevents your crash
-        if (!isAdded() || binding == null || selected_apiCall == null || selected_parameters == null) {
-            Log.d("NewsAPI", "Skipping loadNews: required selection NULL");
-            return;
-        }
-        binding.swipeRefreshLayout.setRefreshing(true);
+        if (Global.isNetworkAvailable(requireContext())) {
 
-        String q = null;
-        String from = null;
-        String to = null;
-        String sortBy = null;
-        String sources = null;
-        String country = null;
-        String category = null;
+            binding.swipeRefreshLayout.setVisibility(View.VISIBLE);
+            binding.noNewsPH.setVisibility(View.GONE);
 
-        // Setup parameters
-        if ("everything".equals(selected_apiCall)) {
-            switch (selected_parameters) {
-                case "apple":
-                    q = "apple";
-                    from = sfromDate;
-                    to = stoDate;
-                    sortBy = "popularity"; // sorted by popularity
-                    break;
-                case "tesla":
-                    q = "tesla";
-                    from = sfromDate;
-                    to = stoDate;
-                    sortBy = "publishedAt"; // sorted by latest
-                    break;
-                case "wsj.com":
-                    sources = "wsj.com";
-                    break;
-                default:
-                    Log.e("NewsAPI", "Unknown parameter: " + selected_parameters);
-                    binding.swipeRefreshLayout.setRefreshing(false);
-                    return;
+            // SAFETY CHECK — prevents your crash
+            if (!isAdded() || binding == null || selected_apiCall == null || selected_parameters == null) {
+                Log.d("NewsAPI", "Skipping loadNews: required selection NULL");
+                return;
+            }
+            binding.swipeRefreshLayout.setRefreshing(true);
+
+            String q = null;
+            String from = null;
+            String to = null;
+            String sortBy = null;
+            String sources = null;
+            String country = null;
+            String category = null;
+
+            // Setup parameters
+            if ("everything".equals(selected_apiCall)) {
+                switch (selected_parameters) {
+                    case "apple":
+                        q = "apple";
+                        from = sfromDate;
+                        to = stoDate;
+                        sortBy = "popularity"; // sorted by popularity
+                        break;
+                    case "tesla":
+                        q = "tesla";
+                        from = sfromDate;
+                        to = stoDate;
+                        sortBy = "publishedAt"; // sorted by latest
+                        break;
+                    case "wsj.com":
+                        sources = "wsj.com";
+                        break;
+                    default:
+                        Log.e("NewsAPI", "Unknown parameter: " + selected_parameters);
+                        binding.swipeRefreshLayout.setRefreshing(false);
+                        return;
+                }
+
+                apiInterface.getEverything(q, from, to, sortBy, sources, Global.api_Key)
+                        .enqueue(getNewsCallback(selected_parameters));
+            } else if ("top-headlines".equals(selected_apiCall)) {
+                switch (selected_parameters) {
+                    case "country":
+                        country = "us";
+                        category = "business";
+                        break;
+                    case "sources":
+                        sources = "techcrunch";
+                        break;
+                    default:
+                        Log.e("NewsAPI", "Unknown parameter: " + selected_parameters);
+                        binding.swipeRefreshLayout.setRefreshing(false);
+                        return;
+                }
+                apiInterface.getTopHeadlines(country, category, sources, Global.api_Key)
+                        .enqueue(getNewsCallback(selected_parameters));
             }
 
-            apiInterface.getEverything(q, from, to, sortBy, sources, Global.api_Key)
-                    .enqueue(getNewsCallback(selected_parameters));
-        } else if ("top-headlines".equals(selected_apiCall)) {
-            switch (selected_parameters) {
-                case "country":
-                    country = "us";
-                    category = "business";
-                    break;
-                case "sources":
-                    sources = "techcrunch";
-                    break;
-                default:
-                    Log.e("NewsAPI", "Unknown parameter: " + selected_parameters);
-                    binding.swipeRefreshLayout.setRefreshing(false);
-                    return;
-            }
-            apiInterface.getTopHeadlines(country, category, sources, Global.api_Key)
-                    .enqueue(getNewsCallback(selected_parameters));
-        }
+            // Log API request parameters
+            Log.d("NewsAPI Request", "query=" + q + ", from=" + from + ", to=" + to +
+                    ", sortBy=" + sortBy + ", sources=" + sources + ", country=" + country +
+                    ", category=" + category + ", apiKey=" + Global.api_Key);
 
-        // Log API request parameters
-        Log.d("NewsAPI Request", "query=" + q + ", from=" + from + ", to=" + to +
-                ", sortBy=" + sortBy + ", sources=" + sources + ", country=" + country +
-                ", category=" + category + ", apiKey=" + Global.api_Key);
+        } else {
+            binding.swipeRefreshLayout.setVisibility(View.GONE);
+            binding.noNewsPH.setVisibility(View.VISIBLE);
+            Global.showDialog(requireContext(), R.drawable.ic_error, "Alert!", "You're not connected to the internet.");
+        }
     }
 
     // Reusable callback for both API calls
@@ -321,14 +332,14 @@ public class NewsFragment extends Fragment implements DatePickerDialog.OnDateSet
 
         if (ffrmDate) {
             stoDate = selectedDate;
-            binding.fromDateTV.setText("Date: " + Global.FormateDate(c.getTime()));
+            binding.fromDateTV.setText("From: " + Global.FormateDate(c.getTime()));
             ffrmDate = false;
             loadNews();
         }
 
         if (ftDate) {
             stoDate = selectedDate;
-            binding.toDateTV.setText("Date: " + Global.FormateDate(c.getTime()));
+            binding.toDateTV.setText("To: " + Global.FormateDate(c.getTime()));
             ftDate = false;
             loadNews();
         }

@@ -1,10 +1,13 @@
 package com.btf.quick_tasks.appUtils;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -56,12 +59,25 @@ public class Global {
 
     }
 
-    public static void setSpinnerValue(ArrayAdapter<String> adapter, String value, Spinner spinner) {
-        if (value != null) {
-            int position = adapter.getPosition(value);
-            spinner.setSelection(position);
-        }
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
+    public static final String PATTERN = "yyyy-MM-dd HH:mm:ss";
+
+    public static long parseToMillis(String dateTime) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat(PATTERN, Locale.ENGLISH);
+        sdf.setLenient(false);
+        Date d = sdf.parse(dateTime);
+        return d == null ? -1 : d.getTime();
+    }
+
+    public static String formatMillis(long millis) {
+        SimpleDateFormat sdf = new SimpleDateFormat(PATTERN, Locale.ENGLISH);
+        return sdf.format(new Date(millis));
+    }
 
 }

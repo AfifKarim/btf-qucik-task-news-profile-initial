@@ -8,69 +8,32 @@
     android:layout_height="match_parent"
     android:padding="8dp">
 
-    <!-- Search EditText (Top) -->
-    <EditText
-        android:id="@+id/searchET"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Search"
-        android:inputType="text" />
-
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="3"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp">
-
-        <!-- From Date -->
-        <TextView
-            android:id="@+id/fromDateTV"
-            android:layout_width="0dp"
-            android:layout_height="30dp"
-            android:layout_weight="1"
-            android:textStyle="bold"
-            android:text="From Date"
-            android:gravity="center|start" />
-
-        <!-- To Date -->
-        <TextView
-            android:id="@+id/toDateTV"
-            android:layout_width="0dp"
-            android:layout_height="30dp"
-            android:layout_weight="1"
-            android:textStyle="bold"
-            android:text="To Date"
-            android:gravity="center|start" />
-
-        <!-- Status Spinner -->
-        <LinearLayout
-            android:id="@+id/statusLayout"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="30dp"
-            android:orientation="vertical"
-            android:gravity="center|start">
-
-            <Spinner
-                android:id="@+id/statusSP"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:focusable="false"/>
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <!-- RecyclerView (Bottom) -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerviewTasks"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:clipToPadding="false"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:context=".ui.tasks.TasksFragment"
-        tools:listitem="@layout/item_tasks"/>
+        android:orientation="vertical">
+
+        <!-- RecyclerView (Bottom) -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerviewTasks"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:visibility="gone"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:context=".ui.tasks.TasksFragment"
+            tools:listitem="@layout/item_tasks"/>
+
+        <TextView
+            android:id="@+id/no_taks_PH"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="No Taska Available"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:visibility="gone"/>
+    </LinearLayout>
 </LinearLayout>

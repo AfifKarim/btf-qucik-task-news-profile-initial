@@ -83,7 +83,4 @@ dependencies {
     // Toggle
     implementation(libs.githubtoggle)
 
-    // WorkManager
-    implementation(libs.workmanager)
-    implementation(libs.work.runtime.ktx)
 }

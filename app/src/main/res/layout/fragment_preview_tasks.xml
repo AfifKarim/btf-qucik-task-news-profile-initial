@@ -3,111 +3,143 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="0dp">
+    android:padding="12dp">
 
-    <LinearLayout
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="12dp"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        app:cardElevation="6dp"
+        app:cardCornerRadius="10dp">
 
-        <!-- Header Row: "Task Preview" + Edit Icon -->
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
 
+            <!-- Header Row: "Task Preview" + Edit Icon -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/previewTitleLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Task Preview"
+                    android:textStyle="bold"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:id="@+id/btnEdit"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_alignParentEnd="true"
+                    android:src="@drawable/ic_edit_pen"
+                    android:contentDescription="Edit" />
+            </RelativeLayout>
+
+            <!-- Task Title -->
             <TextView
-                android:id="@+id/previewTitleLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Task Preview"
+                android:text="Title"
                 android:textStyle="bold"
-                android:textSize="18sp" />
+                android:layout_marginTop="10dp" />
 
-            <ImageView
-                android:id="@+id/btnEdit"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_alignParentEnd="true"
-                android:src="@drawable/ic_edit_pen"
-                android:contentDescription="Edit" />
-        </RelativeLayout>
+            <TextView
+                android:id="@+id/previewTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="--"
+                android:layout_marginTop="3dp" />
 
-        <!-- Task Title -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Title"
-            android:textStyle="bold"
-            android:layout_marginTop="10dp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="3dp"
+                android:background="@color/LightSlateGray" />
 
-        <TextView
-            android:id="@+id/previewTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="--"
-            android:layout_marginTop="3dp" />
+            <!-- Description -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Description"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp" />
 
-        <!-- Description -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Description"
-            android:textStyle="bold"
-            android:layout_marginTop="10dp" />
+            <TextView
+                android:id="@+id/previewDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="--"
+                android:layout_marginTop="3dp" />
 
-        <TextView
-            android:id="@+id/previewDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="--"
-            android:layout_marginTop="3dp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="3dp"
+                android:background="@color/LightSlateGray" />
 
-        <!-- Priority -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Priority"
-            android:textStyle="bold"
-            android:layout_marginTop="10dp" />
+            <!-- Priority -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Priority"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp" />
 
-        <TextView
-            android:id="@+id/previewPriority"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="--"
-            android:layout_marginTop="3dp" />
+            <TextView
+                android:id="@+id/previewPriority"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="--"
+                android:layout_marginTop="3dp" />
 
-        <!-- Due Date -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Due Date"
-            android:textStyle="bold"
-            android:layout_marginTop="10dp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="3dp"
+                android:background="@color/LightSlateGray" />
 
-        <TextView
-            android:id="@+id/previewDueDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="--"
-            android:layout_marginTop="3dp" />
+            <!-- Due Date -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Due Date"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp" />
 
-        <!-- Status -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Status"
-            android:textStyle="bold"
-            android:layout_marginTop="10dp" />
+            <TextView
+                android:id="@+id/previewDueDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="--"
+                android:layout_marginTop="3dp" />
 
-        <TextView
-            android:id="@+id/previewStatus"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="--"
-            android:layout_marginTop="3dp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="3dp"
+                android:background="@color/LightSlateGray" />
 
-    </LinearLayout>
+            <!-- Status -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Status"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp" />
+
+            <TextView
+                android:id="@+id/previewStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="--"
+                android:layout_marginTop="3dp" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 </ScrollView>

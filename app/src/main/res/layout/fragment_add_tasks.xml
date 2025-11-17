@@ -19,7 +19,8 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/titleET"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Description -->
@@ -43,6 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/task_priority"
+            android:textStyle="bold"
             android:layout_marginTop="10dp"/>
         <Spinner
             android:id="@+id/prioritySpinner"
@@ -68,6 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/task_status"
+            android:textStyle="bold"
             android:layout_marginTop="10dp"/>
         <Spinner
             android:id="@+id/statusSpinner"

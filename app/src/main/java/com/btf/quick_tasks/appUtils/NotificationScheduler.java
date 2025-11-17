@@ -1,54 +1,45 @@
 package com.btf.quick_tasks.appUtils;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
-
-import androidx.work.Data;
-import androidx.work.ExistingPeriodicWorkPolicy;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkManager;
 
 import com.btf.quick_tasks.dataBase.entites.TaskEntity;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
+import java.text.ParseException;
 
 public class NotificationScheduler {
 
-    public static void scheduleTaskNotification(Context context, TaskEntity task) {
-
-        // no due date? skip.
-        if (task.getDueDate() == null || task.getDueDate().isEmpty())
+    public static void scheduleTask(Context context, TaskEntity task) {
+        if (!ExactAlarmHelper.canScheduleExactAlarms(context)) {
+            Log.e("taskNotify", "Exact alarm permission not granted for task: " + task.getTitle());
             return;
+        }
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
         try {
-            Date due = sdf.parse(task.getDueDate());
+            long triggerTime = Global.parseToMillis(task.getDueDate());
             long now = System.currentTimeMillis();
+            if (triggerTime < now) triggerTime = now + 2000;
 
-            long delay = due.getTime() - now;
+            Intent intent = new Intent(context.getApplicationContext(), AlarmReceiver.class);
+            intent.putExtra("taskId", task.getId());
 
-            // Past-time task: do not schedule
-            if (delay <= 0) return;
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                    context.getApplicationContext(),
+                    task.getId(),
+                    intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+            );
 
-            Data data = new Data.Builder()
-                    .putString("title", task.getTitle())
-                    .putString("dueDate", task.getDueDate())
-                    .build();
-
-            OneTimeWorkRequest request =
-                    new OneTimeWorkRequest.Builder(TaskNotificationWorker.class)
-                            .setInitialDelay(delay, TimeUnit.MILLISECONDS)
-                            .setInputData(data)
-                            .build();
-
-            WorkManager.getInstance(context).enqueue(request);
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            AlarmManager alarmManager = (AlarmManager) context.getSystemService(AlarmManager.class);
+            if (alarmManager != null) {
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent);
+                Log.d("taskNotify", "Scheduled alarm: " + task.getTitle() + " at " + Global.formatMillis(triggerTime));
+            }
+        } catch (ParseException e) {
+            Log.e("taskNotify", "Failed to parse due date: " + task.getTitle(), e);
         }
     }
 }

@@ -35,6 +35,9 @@ public class TaskEntity {
     @ColumnInfo(name = "updatedAt")
     private String updatedAt;
 
+    @ColumnInfo(name = "shown")
+    private Boolean shown = false;
+
     public TaskEntity(String title, String description, String priority, String dueDate, String status) {
         this.title = title;
         this.description = description;
@@ -118,6 +121,14 @@ public class TaskEntity {
         this.updatedAt = updatedAt;
     }
 
+    public Boolean getShown() {
+        return shown;
+    }
+
+    public void setShown(Boolean shown) {
+        this.shown = shown;
+    }
+
     public List<String> checkValidation() {
         List<String> list = new ArrayList<>();
 
@@ -143,5 +154,20 @@ public class TaskEntity {
 
 
         return list;
+    }
+
+    @Override
+    public String toString() {
+        return "TaskEntity{" +
+                "Id=" + Id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", priority='" + priority + '\'' +
+                ", dueDate='" + dueDate + '\'' +
+                ", status='" + status + '\'' +
+                ", createdAt='" + createdAt + '\'' +
+                ", updatedAt='" + updatedAt + '\'' +
+                ", shown=" + shown +
+                '}';
     }
 }

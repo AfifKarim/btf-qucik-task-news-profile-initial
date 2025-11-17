@@ -53,9 +53,10 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TasksViewHol
 
         holder.mbinding.taskTitle.setText(m.getTitle());
         holder.mbinding.taskDesc.setText(m.getDescription());
-        holder.mbinding.taskCreatedAt.setText("Created Date: " + m.getCreatedAt());
-        holder.mbinding.taskDueDate.setText("Due Date: " + m.getDueDate());
-        holder.mbinding.taskPriority.setText(m.getPriority());
+        holder.mbinding.taskCreatedAt.setText("Created Date:\n" + m.getCreatedAt());
+        holder.mbinding.taskDueDate.setText("Due Date:\n" + m.getDueDate());
+        holder.mbinding.taskPriority.setText("Priority: " + m.getPriority());
+        holder.mbinding.taskStatus.setText("Status: " + m.getStatus());
 
         holder.mbinding.getRoot().setOnLongClickListener(v -> {
             if (m != null) {

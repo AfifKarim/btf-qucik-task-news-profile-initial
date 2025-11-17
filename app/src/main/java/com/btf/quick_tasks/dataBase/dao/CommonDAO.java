@@ -29,11 +29,14 @@ public interface CommonDAO {
     @Query("SELECT * FROM tasks WHERE Id = :id LIMIT 1")
     LiveData<TaskEntity> getTaskById(int id);
 
+    @Query("SELECT * FROM tasks WHERE Id = :id LIMIT 1")
+    TaskEntity getTaskByIdDirect(int id);
+
     @Query("SELECT * FROM tasks ORDER BY Id DESC")
     LiveData<List<TaskEntity>> getAllTasks();
 
-    @Query("SELECT * FROM tasks")
-    List<TaskEntity> getAllTasksDirect();
+    @Query("SELECT * FROM tasks WHERE shown = 0")
+    List<TaskEntity> getAllUnshownTasks();
 
     @Query("select * from tasks " +
             "where status Like '%' || :selectStatus || '%' " +

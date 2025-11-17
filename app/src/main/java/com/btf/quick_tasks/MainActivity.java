@@ -1,12 +1,20 @@
 package com.btf.quick_tasks;
 
+import android.app.AlarmManager;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Toast;
 
+import com.btf.quick_tasks.appUtils.ExactAlarmHelper;
+import com.btf.quick_tasks.appUtils.Global;
 import com.btf.quick_tasks.appUtils.NotificationHelper;
 import com.btf.quick_tasks.appUtils.NotificationScheduler;
 import com.btf.quick_tasks.dataBase.dao.CommonDAO;
@@ -19,6 +27,8 @@ import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -36,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences prefs;
     private ActivityMainBinding binding;
     private NavController navController;
+    private static final int NOTIFICATION_PERMISSION_CODE = 1001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,11 +63,23 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
 
-        NotificationHelper.createNotificationChannel(this);
-        // -------------------------
-        // SCHEDULE NOTIFICATIONS FOR ALL TASKS
-        // -------------------------
-        scheduleAllTaskNotifications();
+        // Request notification permission on Android 13+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS)
+                    != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{android.Manifest.permission.POST_NOTIFICATIONS},
+                        NOTIFICATION_PERMISSION_CODE);
+            }
+        }
+
+        NotificationHelper.createChannel(this);
+
+        if (!ExactAlarmHelper.canScheduleExactAlarms(this)) {
+            ExactAlarmHelper.requestExactAlarmPermission(this);
+        } else {
+            scheduleAllTaskNotifications();
+        }
 
         // Inflate view binding
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -175,17 +198,35 @@ public class MainActivity extends AppCompatActivity {
         tasksDb db = tasksDb.getInstance(this);
         CommonDAO dao = db.commonDao();
 
-        List<TaskEntity> tasks = dao.getAllTasksDirect();
-
+        List<TaskEntity> tasks = dao.getAllUnshownTasks();
         if (tasks == null || tasks.isEmpty()) {
-            Log.e("Notify", "No tasks found, nothing to schedule.");
+            Log.e("TASK-SCHEDULER", "No tasks found in DB");
             return;
         }
 
-        Log.e("Notify", "Scheduling notifications for " + tasks.size() + " tasks.");
+        Log.e("TASK-SCHEDULER", "Full tasks list (" + tasks.size() + " items):");
+        for (TaskEntity task : tasks) {
+            Log.e("TASK-SCHEDULER", task.toString());
+        }
 
         for (TaskEntity task : tasks) {
-            NotificationScheduler.scheduleTaskNotification(this, task);
+            NotificationScheduler.scheduleTask(getApplicationContext(), task);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == NOTIFICATION_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.d("taskNotify", "Notification permission granted");
+                if (ExactAlarmHelper.canScheduleExactAlarms(this)) {
+                    scheduleAllTaskNotifications();
+                }
+            } else {
+                Toast.makeText(this, "Notification permission denied", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }

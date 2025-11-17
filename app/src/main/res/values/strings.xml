@@ -51,14 +51,14 @@
     <string name="select_parameter">Select Parameter</string>
 
     <string-array name="select_apiCall">
-        <item>Select</item>
+        <item>Select Api</item>
         <item>everything</item>
         <item>top-headlines</item>
     </string-array>
 
 
     <string-array name="select_parameter1">
-        <item>Select</item>
+        <item>Select Parameter</item>
         <item>apple</item>
         <item>tesla</item>
         <item>wsj.com</item>
