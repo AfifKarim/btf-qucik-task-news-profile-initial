@@ -50,6 +50,19 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"/>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:hint="@string/task_dueDate">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/dueDateET"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
         <!-- Status -->
         <TextView
             android:layout_width="wrap_content"

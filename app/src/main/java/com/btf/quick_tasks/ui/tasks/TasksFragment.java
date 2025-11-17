@@ -1,6 +1,7 @@
 package com.btf.quick_tasks.ui.tasks;
 
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.text.Editable;
@@ -34,7 +35,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-public class TasksFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
+public class TasksFragment extends Fragment implements DatePickerDialog.OnDateSetListener, TasksAdapter.ItemLongClick {
 
     public static final String TAG = TasksFragment.class.getName();
     FragmentTasksBinding binding;
@@ -67,6 +68,7 @@ public class TasksFragment extends Fragment implements DatePickerDialog.OnDateSe
         binding.recyclerviewTasks.setLayoutManager(llm);
         binding.recyclerviewTasks.setHasFixedSize(true);
         binding.recyclerviewTasks.setAdapter(tasksAdapter);
+        tasksAdapter.setItemLongClick(TasksFragment.this);
 
         sfrmDate = Global.getCurrentMonth() + "-01 00:00:00";
         stoDate   = Global.getCurrentDateWithTime();
@@ -176,4 +178,24 @@ public class TasksFragment extends Fragment implements DatePickerDialog.OnDateSe
         tasksAdapter.setTaskList(filteredList);
 
     }
+
+    public void itemLongClickListener(int position, TaskEntity taskEntity) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Are you sure?")
+                .setMessage("Won't be able to recover this!")
+                .setPositiveButton("Yes, delete it!", (dialog, which) -> {
+
+                    if (taskEntity.getId() != null) {
+                        tasksViewModel.delete(taskEntity); // ⭐ ViewModel handles deletion
+                    }
+
+                    tasksAdapter.notifyItemRemoved(position);
+                    dialog.dismiss();
+                })
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+
+        builder.create().show();
+    }
+
 }

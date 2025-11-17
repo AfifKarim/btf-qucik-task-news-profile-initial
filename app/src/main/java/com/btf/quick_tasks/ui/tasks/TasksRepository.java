@@ -31,6 +31,26 @@ public class TasksRepository {
         executor.execute(() -> commonDAO.insert(task));
     }
 
+    public void update(TaskEntity task) {
+        executor.execute(() -> commonDAO.update(task));
+    }
+
+    public void delete(TaskEntity task) {
+        executor.execute(() -> commonDAO.delete(task));
+    }
+
+    public void deleteById(int taskId) {
+        executor.execute(() -> commonDAO.deleteById(taskId));
+    }
+
+    public LiveData<TaskEntity> getTaskById(int id) {
+        return commonDAO.getTaskById(id);
+    }
+
+    public LiveData<List<TaskEntity>> getAllTasks() {
+        return commonDAO.getAllTasks();
+    }
+
     public LiveData<List<TaskEntity>> getTaskByStatusDate(String fromDate, String toDate, String selectStatus) {
         if (selectStatus != null && !selectStatus.isEmpty()) {
             return commonDAO.getTaskByStatusDate(fromDate, toDate, selectStatus);

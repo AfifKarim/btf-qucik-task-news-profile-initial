@@ -29,6 +29,27 @@ public class TasksViewModel extends AndroidViewModel {
         tasksRepository.insert(task);
     }
 
+    public void update(TaskEntity task) {
+        tasksRepository.update(task);
+    }
+
+
+    public void delete(TaskEntity task) {
+        tasksRepository.delete(task);
+    }
+
+    public void deleteById(int taskId) {
+        tasksRepository.deleteById(taskId);
+    }
+
+    public LiveData<TaskEntity> getTaskById(int id) {
+        return tasksRepository.getTaskById(id);
+    }
+
+    public LiveData<List<TaskEntity>> getAllTasks() {
+        return tasksRepository.getAllTasks();
+    }
+
     public LiveData<List<TaskEntity>> getTaskByStatusDate(String fromDate, String toDate, String selectStatus) {
         return tasksRepository.getTaskByStatusDate(fromDate, toDate, selectStatus);
     }

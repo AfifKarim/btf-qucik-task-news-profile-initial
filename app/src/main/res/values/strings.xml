@@ -8,6 +8,8 @@
 
     <string name="menu_tasks">Tasks</string>
     <string name="menu_add_task">Add Task</string>
+    <string name="menu_preview_task">Preview Tasks</string>
+    <string name="menu_update_task">Update Tasks</string>
     <string name="menu_news">News</string>
     <string name="menu_user_profile">Profile</string>
 

@@ -33,8 +33,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TasksViewHol
     public static final String TAG = TasksAdapter.class.getName();
     List<TaskEntity> list = new ArrayList<>();
     Context context;
-    int fragment_index;
-    String voCode, voName;
+    ItemLongClick itemLongClick;
 
     public TasksAdapter(Context context) {
         this.context = context;
@@ -55,7 +54,23 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TasksViewHol
         holder.mbinding.taskTitle.setText(m.getTitle());
         holder.mbinding.taskDesc.setText(m.getDescription());
         holder.mbinding.taskCreatedAt.setText("Created Date: " + m.getCreatedAt());
+        holder.mbinding.taskDueDate.setText("Due Date: " + m.getDueDate());
         holder.mbinding.taskPriority.setText(m.getPriority());
+
+        holder.mbinding.getRoot().setOnLongClickListener(v -> {
+            if (m != null) {
+                itemLongClick.itemLongClickListener(position, m);
+            }
+            return true;
+        });
+
+
+        holder.mbinding.getRoot().setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            bundle.putInt("Id", m.getId());
+            Navigation.findNavController(holder.itemView)
+                    .navigate(R.id.previewTaskFragment, bundle);
+        });
     }
 
     @Override
@@ -71,6 +86,15 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TasksViewHol
     public void TaskFilter(List<TaskEntity> filteredList) {
         this.list = filteredList;
         notifyDataSetChanged();
+    }
+
+    public void setItemLongClick(ItemLongClick listener) {
+        this.itemLongClick = listener;
+    }
+
+    public interface ItemLongClick {
+        //        void itemLongClickListener(int position, AdmissionBasicEntity enrollID);
+        void itemLongClickListener(int position, TaskEntity taskEntity);
     }
 
 

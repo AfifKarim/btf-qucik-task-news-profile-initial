@@ -23,6 +23,9 @@ public class TaskEntity {
     @ColumnInfo(name = "priority")
     private String priority;
 
+    @ColumnInfo(name = "dueDate")
+    private String dueDate;
+
     @ColumnInfo(name = "status")
     private String status;
 
@@ -32,11 +35,23 @@ public class TaskEntity {
     @ColumnInfo(name = "updatedAt")
     private String updatedAt;
 
-    public TaskEntity(String title, String description, String priority, String status) {
+    public TaskEntity(String title, String description, String priority, String dueDate, String status) {
         this.title = title;
         this.description = description;
         this.priority = priority;
+        this.dueDate = dueDate;
         this.status = status;
+    }
+
+    public TaskEntity(Integer id, String title, String description, String priority, String dueDate, String status, String createdAt, String updatedAt) {
+        Id = id;
+        this.title = title;
+        this.description = description;
+        this.priority = priority;
+        this.dueDate = dueDate;
+        this.status = status;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public Integer getId() {
@@ -69,6 +84,14 @@ public class TaskEntity {
 
     public void setPriority(String priority) {
         this.priority = priority;
+    }
+
+    public String getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(String dueDate) {
+        this.dueDate = dueDate;
     }
 
     public String getStatus() {
@@ -108,6 +131,10 @@ public class TaskEntity {
 
         if (priority == null || priority.trim().isEmpty()) {
             list.add("Priority Is Required");
+        }
+
+        if (dueDate == null || dueDate.trim().isEmpty()) {
+            list.add("Due Date Is Required");
         }
 
         if (status == null || status.trim().isEmpty()) {
