@@ -59,3 +59,9 @@ Proper loading indicators
 Helpful error messages
 
 Empty placeholders when no data is available
+
+
+5. Contact Information
+Name - Afif Mohammed Karim
+Gmail - karimafif03@gmail.com
+Phone - 01728306190
